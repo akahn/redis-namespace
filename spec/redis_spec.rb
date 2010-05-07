@@ -29,7 +29,7 @@ describe "redis" do
     @redis['foo'] = 'bob'
     @redis['foo'].should == 'bob'
 
-    @namespaced.incr('counter', 2)
+    @namespaced.incrby('counter', 2)
     @namespaced['counter'].to_i.should == 2
     @redis['counter'].should == nil
     @namespaced.type('counter').should == 'string'
@@ -54,13 +54,13 @@ describe "redis" do
   end
 
   it "should be able to use a namespace with mset" do
-    @namespaced.mset('foo' => '1000', 'bar' => '2000')
+    @namespaced.mset('foo', '1000', 'bar', '2000')
     @namespaced.mapped_mget('foo', 'bar').should == { 'foo' => '1000', 'bar' => '2000' }
     @namespaced.mapped_mget('foo', 'baz', 'bar').should == { 'foo' => '1000', 'bar' => '2000'}
   end
 
   it "should be able to use a namespace with msetnx" do
-    @namespaced.msetnx('foo' => '1000', 'bar' => '2000')
+    @namespaced.msetnx('foo', '1000', 'bar', '2000')
     @namespaced.mapped_mget('foo', 'bar').should == { 'foo' => '1000', 'bar' => '2000' }
     @namespaced.mapped_mget('foo', 'baz', 'bar').should == { 'foo' => '1000', 'bar' => '2000'}
   end
