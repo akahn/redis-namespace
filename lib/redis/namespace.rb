@@ -124,9 +124,6 @@ class Redis
       "[]="              => [ :first ]
     }
 
-    # support previous versions of redis gem
-    ALIASES = (defined? Redis::Client) ? Redis::Client::ALIASES : Redis::ALIASES
-
     attr_accessor :namespace
 
     def initialize(namespace, options = {})
@@ -141,8 +138,7 @@ class Redis
     end
 
     def method_missing(command, *args, &block)
-      (before, after) = COMMANDS[command.to_s] ||
-        COMMANDS[ALIASES[command.to_s]]
+      (before, after) = COMMANDS[command.to_s]
 
       # Add the namespace to any parameters that are keys.
       case before
