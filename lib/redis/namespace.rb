@@ -155,7 +155,8 @@ class Redis
         args = add_namespace(args)
         args.push(last) if last
       when :alternate
-        args = [ add_namespace(Hash[*args]) ]
+        # Add namespace to even array elements
+        args.each_with_index {|a, i| args[i] = add_namespace(a) if i % 2 == 0}
       end
 
       # Dispatch the command to Redis and store the result.
@@ -171,11 +172,8 @@ class Redis
     def add_namespace(key)
       return key unless key && @namespace
 
-      case key
-      when Array
+      if key.is_a? Array
         key.map {|k| add_namespace k}
-      when Hash
-        Hash[*key.map {|k, v| [ add_namespace(k), v ]}.flatten]
       else
         "#{@namespace}:#{key}"
       end
