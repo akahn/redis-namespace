@@ -155,8 +155,7 @@ class Redis
         args = add_namespace(args)
         args.push(last) if last
       when :alternate
-        # Add namespace to even array elements
-        args.each_with_index {|a, i| args[i] = add_namespace(a) if i % 2 == 0}
+        args.each_with_index {|a, i| args[i] = add_namespace(a) if i.even? }
       end
 
       # Dispatch the command to Redis and store the result.
